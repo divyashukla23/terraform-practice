@@ -100,9 +100,25 @@ resource "aws_instance" "web" {
   vpc_security_group_ids      = [aws_security_group.web_sg.id]
   associate_public_ip_address = true
     
-  provisioner "local-exec" {
-    command = "echo EC2 instance created >> instance_log.txt"
-  }
+#   provisioner "local-exec" {
+#     command = "echo EC2 instance created >> instance_log.txt"
+#   }
+
+connection {
+  type = "ssh"
+  user = "ec2-user"
+  private_key = file("~./divya.pem")
+  host = self.public_ip
+}
+
+provisioner "remote-exec" {
+    inline = [ 
+        "sudo yum update -y"
+        "sudo yum install nginx -y"
+        "sudo systemctl enable nginx"
+        "sudo systemctl start nginx"
+     ]
+}
 
   tags = {
     Name = "Web-Server"
