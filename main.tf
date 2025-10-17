@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "ap-south-1"
+  region = var.aws_region
 }
 
 
@@ -7,17 +7,17 @@ data "aws_vpc" "default" {
   default = true
 }
 
-data "aws_subnets" "default" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-}
+# data "aws_subnets" "default" {
+#   filter {
+#     name   = "vpc-id"
+#     values = [data.aws_vpc.default.id]
+#   }
+# }
 
 resource "aws_security_group" "web_sg" {
   name        = "web-sg"
   description = "Allow HTTP and SSH traffic"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "Allow HTTP"
@@ -43,14 +43,15 @@ resource "aws_security_group" "web_sg" {
   }
 
   tags = {
-    Name = "Web-SG"
+    Name = var.sg_name
   }
 }
 resource "aws_instance" "web" {
   count                       = 2
-  ami                         = "ami-0c02fb55956c7d316" # Ubuntu 22.04 (Mumbai)
-  instance_type               = "t2.micro"
-  subnet_id                   = element(data.aws_subnets.default.ids, count.index)
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
+#   subnet_id                   = element(data.aws_subnets.default.ids, count.index)
+  subnet_id                    = var.subnet_id
   vpc_security_group_ids      = [aws_security_group.web_sg.id]
   associate_public_ip_address = true
 
