@@ -47,7 +47,6 @@ resource "aws_security_group" "web_sg" {
   }
 }
 resource "aws_instance" "web" {
-  count                       = 2
   ami                         = var.ami_id
   instance_type               = var.instance_type
 #   subnet_id                   = element(data.aws_subnets.default.ids, count.index)
@@ -57,7 +56,7 @@ resource "aws_instance" "web" {
 
 
   tags = {
-    Name = "Web-Server-${count.index + 1}"
+    Name = "Web-Server"
     Env  = "Dev"
   }
 # EOF is called "heredoc"
@@ -65,7 +64,7 @@ resource "aws_instance" "web" {
      #!/bin/bash
     sudo apt update -y
     sudo apt install apache2 -y
-    echo "<h1>Hello from Web Server ${count.index + 1}</h1>" > /var/www/html/index.html
+    echo "<h1>Hello from Web Server </h1>" > /var/www/html/index.html
     sudo systemctl start apache2
     EOF
 
