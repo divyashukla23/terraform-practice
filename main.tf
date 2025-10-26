@@ -83,6 +83,6 @@ resource "aws_instance" "my-ec2" {
   associate_public_ip_address = true
 
   provisioner "local-exec" {
-    command = "echo Instance $(self.id) created >> instances.txt"
+    command = "echo Instance ${self.id} created >> instances.txt"
   }
 }
