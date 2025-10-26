@@ -78,11 +78,25 @@ resource "aws_route_table_association" "public_assoc" {
 resource "aws_instance" "my-ec2" {
   ami = "ami-07860a2d7eb515d9a"
   instance_type = "t3.micro"
+  key_name = "test"
   subnet_id              = aws_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.web_sg.id]
   associate_public_ip_address = true
 
-  provisioner "local-exec" {
-    command = "echo Instance ${self.id} created >> instances.txt"
+#   provisioner "local-exec" {
+#     command = "echo Instance ${self.id} created >> instances.txt"
+#   }
+
+provisioner "remote-exec" {
+    inline = [ 
+      "sudo apt update -y",
+      "sudo apt install nginx -y"
+     ]
+}
+ connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file("./test.pem")
+    host        = self.public_ip
   }
 }
