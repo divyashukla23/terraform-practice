@@ -16,7 +16,7 @@ resource "aws_subnet" "public_subnet" {
   vpc_id = aws_vpc.main_vpc.id
   cidr_block = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone = "ap-south-1a"
+  availability_zone = "us-east-1a"
 
   tags = {
     Name = "public-subnet"
@@ -76,9 +76,13 @@ resource "aws_route_table_association" "public_assoc" {
 
 
 resource "aws_instance" "my-ec2" {
-  ami = "ami-00af95fa354fdb788"
+  ami = "ami-07860a2d7eb515d9a"
   instance_type = "t3.micro"
   subnet_id              = aws_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.web_sg.id]
   associate_public_ip_address = true
+
+  provisioner "local-exec" {
+    command = "echo Instance $(self.id) created >> instances.txt"
+  }
 }
