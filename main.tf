@@ -1,3 +1,11 @@
+terraform {
+  backend "s3" {
+    bucket         = "terraform-state-divya"
+    key            = "dev/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt = true
+  }
+}
 provider "aws" {
   region = var.aws_region
 }
@@ -90,8 +98,8 @@ resource "aws_instance" "my-ec2" {
 provisioner "remote-exec" {
     inline = [ 
       "sudo apt update -y",
-      "sudo apt install nginx -y"
-      "sudo systemctl enabe nginx"
+      "sudo apt install nginx -y",
+      "sudo systemctl enabe nginx",
     "sudo systemctl start nginx"
      ]
 }
