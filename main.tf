@@ -1,8 +1,16 @@
+# aws dynamodb create-table \
+#   --table-name terraform-locks \
+#   --attribute-definitions AttributeName=LockID,AttributeType=S \
+#   --key-schema AttributeName=LockID,KeyType=HASH \
+#   --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+#   --region us-east-1
+
 terraform {
   backend "s3" {
     bucket         = "terraform-state-divya"
     key            = "dev/terraform.tfstate"
     region         = "us-east-1"
+    dynamodb_table = "terraform-locks"
     encrypt = true
   }
 }
