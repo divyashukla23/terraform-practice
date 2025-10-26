@@ -91,6 +91,8 @@ provisioner "remote-exec" {
     inline = [ 
       "sudo apt update -y",
       "sudo apt install nginx -y"
+      "sudo systemctl enabe nginx"
+    "sudo systemctl start nginx"
      ]
 }
  connection {
