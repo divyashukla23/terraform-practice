@@ -10,7 +10,15 @@ module "ec2_dev" {
     environment = "dev"
   
 }
-
+module "s3_dev" {
+  source = "./modules/s3"
+  bucket_name = var.s3_bucket_name
+  enable_versioning = true
+  environment = "development"
+}
 output "dev_public_ip" {
   value = module.ec2_dev.instance_public_ip
+}
+output "s3_bucket_name" {
+  value = module.s3_dev.bucket_name
 }
