@@ -5,7 +5,7 @@ provider "aws" {
 module "ec2_dev" {
     source = "./modules/ec2_instance"
     ami_id = var.ami_id
-    instance_type = "t2.micro"
+    instance_type = var.instance_type
     instance_name = "dev_server"
     environment = "dev"
   
